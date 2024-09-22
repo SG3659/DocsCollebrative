@@ -86,7 +86,8 @@ const createUser = async (req: Request, res: Response): Promise<Response> => {
        .json({
          success: true,
          message:"Login",
-         user: rest,
+         data:token,
+         ...rest,
        });
 
    } catch (error) {
