@@ -97,11 +97,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             sameSite: "strict",
             secure: false,
         })
-            .json({
-            success: true,
-            message: "Login",
-            user: rest,
-        });
+            .json(Object.assign({ success: true, message: "Login", data: token }, rest));
     }
     catch (error) {
         console.log(error);

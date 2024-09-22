@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { showLoading, hideLoading } from "../redux/loaderSlice";
+import signUpApi from "../api/signUpApi";
 const signup = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -21,27 +19,9 @@ const signup = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    try {
-      dispatch(showLoading());
-      const response = await axios.post(
-        "/api/auth/register",
-        JSON.stringify(formData),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      dispatch(hideLoading());
-      if (response.data.success) {
-        toast.success(response.data.message);
-        navigate("/login");
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      dispatch(hideLoading());
-      console.error("something went wrong ", error);
+    const response = await signUpApi(formData);
+    if (response) {
+      navigate("/login");
     }
   };
   return (
