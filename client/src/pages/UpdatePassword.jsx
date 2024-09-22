@@ -1,14 +1,14 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import toast from "react-hot-toast";
+import updatePasswordApi from "../api/updatePasswordApi";
 const UpdatePassword = () => {
   const [formData, setFormData] = useState({
     newPassword: "",
   });
   const navigate = useNavigate();
-  
+
   function changeHandler(e) {
     setFormData({
       ...formData,
@@ -24,18 +24,10 @@ const UpdatePassword = () => {
       toast.error("Password and Confirm Password must be same");
       return;
     }
-    try {
-      const response = await axios.post(
-        `/api/auth/resetPassword/${userId}/${resetString}`,
-        formData
-      );
-      if (response.data.success) {
-        toast.success("Password Has Updated Successfully");
-        localStorage.clear();
-        navigate("/password-reset-success");
-      }
-    } catch (error) {
-      console.error("something went wrong ", error);
+
+    const response = await updatePasswordApi(resetString, userId, formData);
+    if (response) {
+      navigate("/password-reset-success");
     }
   };
   return (
@@ -61,7 +53,10 @@ const UpdatePassword = () => {
             onChange={changeHandler}
             value={formData.confirmPassword}
           />
-          <p className="text-white text-center"> min 8 cha. & contain special Character</p>
+          <p className="text-white text-center">
+            {" "}
+            min 8 cha. & contain special Character
+          </p>
           <button className="relative inline-flex items-center justify-center px-10 py-3 overflow-hidden font-bold rounded-full group">
             <span className=" text-white group-hover:text-black">Submit</span>
             <span className="absolute inset-0 border-2 border-blue-600 rounded-full"></span>
