@@ -140,7 +140,7 @@ const userData = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.userData = userData;
 const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email } = req.body;
-    const redirectUrl = "https://docs-collebrative.vercel.app/reset-password";
+    const redirectUrl = "http://localhost:5173/reset-password";
     try {
         const user = yield userModel_1.default.findOne({ email });
         if (user) {

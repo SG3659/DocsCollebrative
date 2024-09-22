@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import toast from "react-hot-toast";
+import forgotPasswordApi from "../api/forgotPasswordApi";
 const ForgotPassword = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -15,21 +14,9 @@ const ForgotPassword = () => {
   }
   const submitHandler = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post(
-        "/api/auth/requestPasswordReset",
-        formData
-      );
-      // console.log(response.data);
-      if (response.data.success) {
-        toast.success("Email Sent Successfully Please Check Your Email");
-        localStorage.setItem("email", formData.email);
-        navigate("/email-sent");
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.error("something went wrong ", error);
+    const response = await forgotPasswordApi(formData);
+    if (response) {
+      navigate("/email-sent");
     }
   };
   return (
