@@ -4,11 +4,11 @@ import Document from "../model/document";
 
 
 const defaultData = "";
- const findOrCreateDocument = async({ id,name }: { id: string, name:string }) => {
- if(id == null ) return ;
- const document= await Document.findById(id);
+ const findOrCreateDocument = async({ documentId,documentName }: { documentId: string, documentName:string }) => {
+ if(!documentId  ) return ;
+ const document= await Document.findById(documentId);
   if(document) return document;
-  const newDocument= await Document.create({_id: id,  name: name, data: defaultData})
+  const newDocument= await Document.create({_id: documentId,  name: documentName, data: defaultData})
   await newDocument.save();
   return newDocument;
 }

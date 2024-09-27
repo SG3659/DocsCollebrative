@@ -4,9 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const verify_1 = __importDefault(require("../middleware/verify"));
 const router = express_1.default.Router();
 const docsController_1 = require("../controller/docsController");
-router.get("/getAllDocs", (req, res) => {
+router.get("/getAllDocs", verify_1.default, (req, res) => {
     (0, docsController_1.getAllDocs)(req, res);
 });
 router.delete("/delete", (req, res) => {

@@ -109,7 +109,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.loginUser = loginUser;
 const userData = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield userModel_1.default.findOne({ _id: req.body.userId }).select("-password");
+    const user = yield userModel_1.default.findOne({ _id: req.body.userId });
     try {
         if (!user) {
             return res.status(401).json({
@@ -120,11 +120,7 @@ const userData = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         else {
             return res.json({
                 success: true,
-                data: {
-                    name: user.username,
-                    email: user.email,
-                    photo: user.profileImageURL,
-                },
+                data: user,
                 message: "user exists",
             });
         }

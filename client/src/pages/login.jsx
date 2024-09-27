@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { signInSuccess, signInFailure, signInStart } from "../redux/userSlice";
 import loginApi from "../api/loginApi";
+import validatePassword from "../components/ValidationPassword/validatePassword";
+import toast from "react-hot-toast";
 const login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -11,6 +14,7 @@ const login = () => {
     password: "",
   });
   const [showPass, setShowPass] = useState(false);
+
   function changeHandler(e) {
     setFormData({
       ...formData,
@@ -19,7 +23,18 @@ const login = () => {
   }
   const submitHandler = async (e) => {
     e.preventDefault();
-    const response = await loginApi(formData);
+    // const validateError = validatePassword(formData.password);
+    // if (validatePassword) {
+    //   toast.error(validateError);
+    //   return;
+    // }
+    const response = await loginApi(
+      formData,
+      signInStart,
+      signInSuccess,
+      signInFailure,
+      dispatch
+    );
     if (response) {
       // console.log(response.data);
       navigate("/");

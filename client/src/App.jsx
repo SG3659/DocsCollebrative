@@ -1,6 +1,5 @@
 import TextEditor from "./components/TextEditor/TextEditor";
 import { Routes, Navigate, Route } from "react-router-dom";
-import { v4 as uuidV4 } from "uuid";
 import Home from "../src/pages/home";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
@@ -74,20 +73,15 @@ function App() {
             </PublicRoute>
           }
         />
-        <Route path="/">
-          <Route
-            path="docs"
-            element={<Navigate to={`/document/${uuidV4()}`} />}
-          />
-          <Route
-            path="document/:id"
-            element={
-              <PrivateRoute>
-                <TextEditor />
-              </PrivateRoute>
-            }
-          />
-        </Route>
+
+        <Route
+          path="/document/:id"
+          element={
+            <PrivateRoute>
+              <TextEditor />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </div>
   );

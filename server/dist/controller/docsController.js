@@ -15,13 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteDoc = exports.findOrCreateDocument = exports.getAllDocs = void 0;
 const document_1 = __importDefault(require("../model/document"));
 const defaultData = "";
-const findOrCreateDocument = (_a) => __awaiter(void 0, [_a], void 0, function* ({ id, name }) {
-    if (id == null)
+const findOrCreateDocument = (_a) => __awaiter(void 0, [_a], void 0, function* ({ documentId, documentName }) {
+    if (!documentId)
         return;
-    const document = yield document_1.default.findById(id);
+    const document = yield document_1.default.findById(documentId);
     if (document)
         return document;
-    const newDocument = yield document_1.default.create({ _id: id, name: name, data: defaultData });
+    const newDocument = yield document_1.default.create({ _id: documentId, name: documentName, data: defaultData });
     yield newDocument.save();
     return newDocument;
 });

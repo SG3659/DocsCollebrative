@@ -30,11 +30,12 @@ app.use(cookieParser());
 io.on("connection", (socket) => {
   console.log("user-connected", socket.id);
 
-  socket.on("get-document", async (documentId:string, documentName:string) => {
+  socket.on("get-document", async (documentId, documentName) => {
     socket.join(documentId);
-    const document = await findOrCreateDocument({id:documentId,name:documentName});
-   
+    const document = await findOrCreateDocument({documentId,documentName});
+   if(document)
     socket.emit("load-document", document?.data);
+
     socket.on("send-change", (delta) => {
       socket.broadcast.to(documentId).emit("receive-change", delta);
     });
