@@ -100,7 +100,7 @@ const createUser = async (req: Request, res: Response): Promise<Response> => {
  }
 
  const userData =async(req:Request,res:Response):Promise<Response>=>{
-   const user = await User.findOne({ _id: req.body.userId }).select("-password"); 
+   const user = await User.findOne({ _id: req.body.userId })
    try {
       if(!user){
          return res.status(401).json({
@@ -110,11 +110,7 @@ const createUser = async (req: Request, res: Response): Promise<Response> => {
       }else{
          return res.json({
             success: true,
-            data: {
-              name: user.username,
-              email: user.email,
-              photo: user.profileImageURL,
-            },
+            data: user,
             message: "user exists",
           });
       }

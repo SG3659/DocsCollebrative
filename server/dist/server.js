@@ -41,8 +41,9 @@ io.on("connection", (socket) => {
     console.log("user-connected", socket.id);
     socket.on("get-document", (documentId, documentName) => __awaiter(void 0, void 0, void 0, function* () {
         socket.join(documentId);
-        const document = yield (0, docsController_1.findOrCreateDocument)({ id: documentId, name: documentName });
-        socket.emit("load-document", document === null || document === void 0 ? void 0 : document.data);
+        const document = yield (0, docsController_1.findOrCreateDocument)({ documentId, documentName });
+        if (document)
+            socket.emit("load-document", document === null || document === void 0 ? void 0 : document.data);
         socket.on("send-change", (delta) => {
             socket.broadcast.to(documentId).emit("receive-change", delta);
         });

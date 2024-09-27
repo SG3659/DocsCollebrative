@@ -13,37 +13,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const verify = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
-        // Retrieve the token from request headers
-        const token = req.cookies['access_token'];
+        const token = (_a = req.header('Authorization')) === null || _a === void 0 ? void 0 : _a.replace('Bearer ', '');
         if (!token) {
-            return res.status(401).json({
-                success: false,
-                message: "Auth failed: No token provided",
-            });
+            throw new Error();
         }
-        // Verify the token
-        jsonwebtoken_1.default.verify(token, process.env.JWT_TOKEN, (err, decoded) => {
-            if (err) {
-                return res.status(401).json({
-                    success: false,
-                    message: "Auth failed",
-                });
-            }
-            else {
-                // Decode token payload and assign
-                const payload = decoded; // Cast to JwtPayload to ensure it has a known shape
-                req.body.userId = payload.id;
-                next();
-            }
-        });
+        const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_PASSWORD);
+        req.userId = decoded;
+        next();
     }
-    catch (error) {
-        return res.status(401).json({
-            success: false,
-            message: "Invalid token key",
-        });
+    catch (err) {
+        res.status(401).send('Please authenticate');
     }
 });
-exports.default = verify;
+exports.default = authMiddleware;

@@ -1,50 +1,31 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { useParams } from "react-router-dom";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-
-const Datatable = () => {
-  const [docs, setDocs] = useState();
-  const params = useParams();
+import moment from "moment";
+const Datatable = (props) => {
+  const doc = props.docs;
   const navigate = useNavigate();
-  const getData = async () => {
-    try {
-      const response = await axios.get(
-        "/api/docs/getAllDocs",
-        { userId: params.id },
-        {
-          headers: {
-            Authorization: " Bearer" + localStorage.getItem("token"),
-          },
-        }
-      );
-      if (response.data.success) {
-        setDocs(response.data.data);
-        //   console.log(response.data.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    getData();
-  });
   return (
-    <div className="w-[999px] flex flex-wrap justify-center gap-10 p-6 bg-gray-200 rounded-lg shadow-2xl">
-      {docs && docs.length > 0
-        ? docs.map((row, rowIndex) => (
-            <div
-              key={rowIndex}
-              onClick={() => navigate(`/document/${row._id}`)}
-              className="w-40 h-60 bg-gray-100 rounded-2xl shadow-2xl flex flex-col justify-center p-2 cursor-pointer"
-            >
-              <div className="w-36 h-48 bg-white  rounded-xl object-cover "></div>
-              <h4 className="text-center">{row.name}</h4>
-              <p className="text-xs">{row.createdAt}</p>
-            </div>
-          ))
-        : "CREATE NEW DATA"}
-    </div>
+    <table className="border-collapse w-1/2 ">
+      <tbody>
+        {doc?.map((row, rowIndex) => (
+          <tr
+            className="cursor-pointer hover:bg-blue-200  "
+            key={rowIndex}
+            onClick={() => navigate(`/document/${row._id}`)}
+          >
+            <td className="p-2 text-left border-b border-gray-300  rounded-l-2xl font-light">
+              {row.name}
+            </td>
+            <td className="p-2 text-right border-b border-gray-300  font-light">
+              {moment(row.createdAt).format("YYYY-MM-DD")}
+            </td>
+            <td className="p-2 text-right border-b border-gray-300 rounded-r-2xl font-light">
+              {moment(row.createdAt).format("HH:mm:ss")}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 };
 
