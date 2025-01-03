@@ -3,8 +3,6 @@ import User from "../model/userModel"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import PasswordReset from "../model/passwordResetModel"
-import nodemailer,{Transporter} from"nodemailer"
-import {v4 as uuidv4} from "uuid"
 import sendResetEmail from"../service/sendResetEmail"
 import dotenv from "dotenv"
 dotenv.config();
@@ -72,7 +70,7 @@ const createUser = async (req: Request, res: Response): Promise<Response> => {
             message:"Invalid Password"
          })
       }
-      const token = jwt.sign({ _id: user._id }, process.env.JWT_PASSWORD as string, {
+      const token = jwt.sign({ userId: user._id, email:user.email,  }, process.env.JWT_PASSWORD as string, {
          expiresIn: "1d",
        });
       
@@ -146,9 +144,6 @@ const resetPassword = async (req: Request, res: Response) => {
     });
   }
 };
-
-
-
 
  const updatePassword = async (req: Request, res: Response) => {
   const { userId, resetString } = req.params;

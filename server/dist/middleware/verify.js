@@ -13,21 +13,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
-const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+const userModel_1 = __importDefault(require("../model/userModel")); // Adjust the import path as necessary
+const AuthMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const token = (_a = req.header('Authorization')) === null || _a === void 0 ? void 0 : _a.replace('Bearer ', '');
+        const token = req.header("Authorization");
+        // const token = req.cookies.token; // Uncomment if using cookies
         if (!token) {
-            throw new Error();
+            return res.status(401).json({ message: "Please login or Register." });
         }
-        const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_PASSWORD);
-        req.userId = decoded;
+        const tokenWithoutBearer = token.replace("Bearer ", "");
+        const verified = jsonwebtoken_1.default.verify(tokenWithoutBearer, process.env.JWT_PASSWORD);
+        const user = yield userModel_1.default.findById(verified.userId).select("-password");
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+        req.auth = user;
         next();
     }
-    catch (err) {
-        res.status(401).send('Please authenticate');
+    catch (error) {
+        console.error(error.message);
+        return res
+            .status(401)
+            .json({ message: "Token expired. Please log in again." });
     }
 });
-exports.default = authMiddleware;
+exports.default = AuthMiddleware;

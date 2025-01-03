@@ -17,8 +17,8 @@ const defaultData = "";
 
  const getAllDocs = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { userId } = req.body
-        const Docs = await Document.find({ userId });
+    const { userId } = req.auth._id
+        const Docs = await Document.find({ user:userId });
 
     // If there is a search query, filter documents by name
     const filterDocs = req.query.search 

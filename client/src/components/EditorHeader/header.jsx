@@ -1,15 +1,13 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
-
-const header = ({ children }) => {
+import Share from "../../components/Share/Share";
+const header = ({ children, documentId }) => {
   const navigate = useNavigate();
   return (
     <>
       <nav className="flex item-center  p-2 w-full z-20 fixed top-0  bg-white gap-1 shadow-2xl">
         <div>
           <img
-          className="w-8 h-10 cursor-pointer "
-          
+            className="w-8 h-10 cursor-pointer "
             onClick={() => navigate("/")}
             src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxEQEBAQDw8QEBAPEhAPEBAPDQ8PEBAQFREYFhUSEx
          MYHSggGBolGxUVITEhJSkrLi4uFyAzODMsNygtLisBCgoKDg0OGhAQGy4lHSUtKy0tLSsrNy0tListListLS03KzU3LS0tMi0tKystLy0tL
@@ -35,14 +33,17 @@ const header = ({ children }) => {
           />
         </div>
         <div className=" flex flex-col">
-        <h1 className="font-light text-lg font-google ">Docs</h1>
-        <ul className="flex gap-1 text-sm ">
+          <h1 className="font-light text-lg font-google ">Docs</h1>
+          <ul className="flex gap-1 text-sm ">
             <li>File</li>
             <li>Insert</li>
-            <li>View</li>
+            <li>Share</li>
           </ul>
         </div>
       </nav>
+      <div className=" p-8 absolute flex justify-center items-center ">
+        <Share documentId={documentId} />
+      </div>
       <div>{children}</div>
     </>
   );

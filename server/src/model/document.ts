@@ -21,6 +21,11 @@ const userDocument =new Schema({
    createdAt: {
      type: Date,
    },
+   user:{
+    type:Schema.Types.ObjectId,
+    ref:"User",
+    require:true
+   }
  },
  { timestamps: true })
 const documentModel =model<IDOCS>("Document",userDocument)
