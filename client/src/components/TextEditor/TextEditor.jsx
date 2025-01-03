@@ -119,7 +119,7 @@ export default function TextEditor() {
 
   return (
     <>
-      <Header>
+      <Header documentId={documentId}>
         <div className="main">
           <div className="editor">
             <div className="container" ref={wrapperRef}></div>

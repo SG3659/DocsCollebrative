@@ -5,7 +5,9 @@ import { TbPlus } from "react-icons/tb";
 const Card = () => {
   const navigate = useNavigate();
   const [toggle, setToggle] = useState(false);
+  const [toggle2, setToggle2] = useState(false);
   const [docName, setDocName] = useState(" ");
+  const [documentId, setDocumentId] = useState(" ");
   const id = uuidV4();
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,6 +17,11 @@ const Card = () => {
     } else {
       alert("Document name cannot be empty!");
     }
+  };
+
+  const handlerDocumentId = async (e) => {
+    e.preventDefault();
+    navigate(`/document/${documentId}`);
   };
 
   return (
@@ -55,6 +62,32 @@ const Card = () => {
           >
             Close
           </button>
+        </div>
+
+        <div
+          className=" bg-white w-40 h-52 flex justify-center items-center rounded-md  hover:border-blue-600 cursor-pointer "
+          onClick={() => setToggle2(!toggle2)}
+        ></div>
+        <div
+          className={`${
+            !toggle2 ? "hidden" : "flex"
+          } absolute top-60  h-56 rounded-3xl z-9999 flex-col justify-center items-center  bg-slate-300 p-28 `}
+        >
+          <h1>Enter The DocumentId</h1>
+          <form
+            onSubmit={handlerDocumentId}
+            className="mt-3 flex justify-center items-center flex-col"
+          >
+            <input
+              className=" focus:outline-none rounded-lg p-1"
+              type="text"
+              value={documentId}
+              onChange={(e) => setDocumentId(e.target.value)}
+            />
+            <button className=" mt-2  p-1 w-36 rounded-full  text-white bg-blue-600 ">
+              Move
+            </button>
+          </form>
         </div>
       </div>
     </>

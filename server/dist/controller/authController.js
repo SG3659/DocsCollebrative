@@ -87,7 +87,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 message: "Invalid Password"
             });
         }
-        const token = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_PASSWORD, {
+        const token = jsonwebtoken_1.default.sign({ userId: user._id, email: user.email, }, process.env.JWT_PASSWORD, {
             expiresIn: "1d",
         });
         const _a = user.toObject(), { password: pass } = _a, rest = __rest(_a, ["password"]);

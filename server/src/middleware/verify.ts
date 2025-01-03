@@ -1,28 +1,43 @@
 import { Request, Response, NextFunction } from "express";
-import jwt, { JwtPayload } from "jsonwebtoken";
-import dotenv from "dotenv";
-dotenv.config();
+import jwt from "jsonwebtoken";
+import User from "../model/userModel"; // Adjust the import path as necessary
 
-
-
-export interface CustomRequest extends Request {
- userId: string | JwtPayload;
+declare module "express-serve-static-core" {
+  interface Request {
+    auth?: any;
+  }
 }
 
- const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
- try {
-   const token = req.header('Authorization')?.replace('Bearer ', '');
+const AuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const token = req.header("Authorization");
+    // const token = req.cookies.token; // Uncomment if using cookies
 
-   if (!token) {
-     throw new Error();
-   }
+    if (!token) {
+      return res.status(401).json({ message: "Please login or Register." });
+    }
 
-   const decoded = jwt.verify(token,process.env.JWT_PASSWORD as any);
-   (req as CustomRequest).userId = decoded;
+    const tokenWithoutBearer = token.replace("Bearer ", "");
 
-   next();
- } catch (err) {
-   res.status(401).send('Please authenticate');
- }
+    const verified = jwt.verify(
+      tokenWithoutBearer,
+      process.env.JWT_PASSWORD as string
+    ) as { userId: string };
+
+    const user = await User.findById(verified.userId).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    req.auth = user;
+    next();
+  } catch (error: any) {
+    console.error(error.message);
+    return res
+      .status(401)
+      .json({ message: "Token expired. Please log in again." });
+  }
 };
-export default authMiddleware;
+
+export default AuthMiddleware;
